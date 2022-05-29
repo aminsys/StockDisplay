@@ -1,0 +1,115 @@
+﻿@model IEnumerable<StockTracker.Models.Stock>
+
+@{
+    ViewData["Title"] = "Stock";
+}
+
+<script src = "https://cdn.jsdelivr.net/npm/chart.js@3.8.0/dist/chart.min.js"></script>
+<script src = "https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.js"></script>
+<script src = "https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+<h1>Stock symbol - VOLV-B.ST</h1>
+
+<div>
+   <table class="table">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Id)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CloseDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Close)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AdjustedClose)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Volume)
+            </th>
+        </tr>
+
+    @foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CloseDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Close)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AdjustedClose)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Volume)
+            </td>
+           @* <td>
+                @Html.ActionLink("Edit", "Edit", new { id=item.AutoId }) |
+                @Html.ActionLink("Details", "Details", new { id=item.AutoId }) |
+                @Html.ActionLink("Delete", "Delete", new { id=item.AutoId })
+            </td>*@
+        </tr>
+        }
+    </table>
+</div>
+
+<div>
+    <canvas id="myChart" width="400" height="400"></canvas>
+    <script>
+        
+        var model = @Html.Raw(Json.Serialize(ViewBag.stock));
+        var closedPriceList = [];
+        var dates = [];
+        for (let i = 0; i < model.length; i++){
+            closedPriceList.push(model[i]['close']);
+            // dates.push(new Date(model[i]['closedate']));
+            dates.push(i);
+        }
+        // console.log(closedPriceList);
+        // console.log(model[0]['closedate']);
+        const ctx = document.getElementById('myChart').getContext('2d');
+        const myChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: dates,
+                datasets: [{
+                    label: 'Stock data for Volvo B-series',
+                    data: closedPriceList,
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(255, 206, 86, 0.2)',
+                        'rgba(75, 192, 192, 0.2)',
+                        'rgba(153, 102, 255, 0.2)',
+                        'rgba(255, 159, 64, 0.2)'
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)',
+                        'rgba(255, 159, 64, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: false
+                    }
+                }
+            }
+        });
+    </script>
+
+</div>
+<div>
+    @Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |
+    <a asp-action="Index">Back to List</a>
+</div>
