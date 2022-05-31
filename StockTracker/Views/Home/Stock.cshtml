@@ -10,8 +10,9 @@
 
 <h1>Stock symbol - VOLV-B.ST</h1>
 
+<button id="view_button" type="button" class="btn mb-3 mt-3 btn-primary">Toggle view of stock data</button>
 <div>
-   <table class="table">
+   <table class="table" id="stock_table">
         <tr>
             <th>
                 @Html.DisplayNameFor(model => model.Id)
@@ -58,21 +59,33 @@
 </div>
 
 <div>
-    <canvas id="myChart" width="400" height="400"></canvas>
+    <canvas id="my_chart" width="200" height="200"></canvas>
+
     <script>
-        
+
+        $(document).ready(function() {
+            $("#stock_table").hide();
+            $("#view_button").on("click", function() {
+                $("#stock_table").toggle();
+                $("#my_chart").toggle();
+            });
+        });
+
         var model = @Html.Raw(Json.Serialize(ViewBag.stock));
         var closedPriceList = [];
         var dates = [];
+        var date = new Date();
         for (let i = 0; i < model.length; i++){
             closedPriceList.push(model[i]['close']);
-            // dates.push(new Date(model[i]['closedate']));
-            dates.push(i);
+            /*let m = date.getMonth() + 1;
+            let d = date.getDate() - i;*/
+            dates.push(model[i]['closeDate'].substring(5,10));
+            // dates.push(i);
         }
         // console.log(closedPriceList);
-        // console.log(model[0]['closedate']);
-        const ctx = document.getElementById('myChart').getContext('2d');
-        const myChart = new Chart(ctx, {
+        console.log(model[0]['closeDate']);
+        const ctx = document.getElementById('my_chart').getContext('2d');
+        const my_chart = new Chart(ctx, {
             type: 'line',
             data: {
                 labels: dates,
@@ -80,22 +93,22 @@
                     label: 'Stock data for Volvo B-series',
                     data: closedPriceList,
                     backgroundColor: [
-                        'rgba(255, 99, 132, 0.2)',
-                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(255, 99, 132, 0.2)'
+                        /*'rgba(54, 162, 235, 0.2)',
                         'rgba(255, 206, 86, 0.2)',
                         'rgba(75, 192, 192, 0.2)',
                         'rgba(153, 102, 255, 0.2)',
-                        'rgba(255, 159, 64, 0.2)'
+                        'rgba(255, 159, 64, 0.2)'*/
                     ],
                     borderColor: [
-                        'rgba(255, 99, 132, 1)',
-                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 99, 132, 1)'
+                        /*'rgba(54, 162, 235, 1)',
                         'rgba(255, 206, 86, 1)',
                         'rgba(75, 192, 192, 1)',
                         'rgba(153, 102, 255, 1)',
-                        'rgba(255, 159, 64, 1)'
+                        'rgba(255, 159, 64, 1)'*/
                     ],
-                    borderWidth: 1
+                    borderWidth: 2
                 }]
             },
             options: {
@@ -110,6 +123,6 @@
 
 </div>
 <div>
-    @Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |
+    @*@Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |*@
     <a asp-action="Index">Back to List</a>
 </div>
