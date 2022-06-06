@@ -12,6 +12,10 @@ namespace StockTracker.Controllers
         private readonly ILogger<HomeController> _logger;
         private readonly List<Stock> _stocks = new List<Stock>();
 
+        [BindProperty]
+        public Stock Stockie {get; set;}
+
+
         public HomeController(ILogger<HomeController> logger)
         {
             _logger = logger;
@@ -57,9 +61,19 @@ namespace StockTracker.Controllers
             return View();
         }
 
+        
         public async Task<ActionResult> Stock()
         {
-            var model = await GetStockData("VOLV-B.ST", new DateTime(2022, 05, 01), DateTime.Now);
+            var model = await GetStockData("AAPL", new DateTime(2022, 05, 01), DateTime.Now);
+            ViewBag.Stock = model.ToList();
+            return View(model);            
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> Stock(IFormCollection stock)
+        {
+            Console.WriteLine("The stock symbol is: " + stock["stock_symbol"].ToString());
+            var model = await GetStockData(stock["stock_symbol"], new DateTime(2022, 05, 01), DateTime.Now);
             ViewBag.Stock = model.ToList();
             return View(model);
         }
