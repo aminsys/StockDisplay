@@ -8,14 +8,17 @@
 <script src = "https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.js"></script>
 <script src = "https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
-<h1>Stock data displayer</h1>
+<h1>Stock Data Displayer</h1>
 <p>This page displays the historical close prices of a stock. The view can be toggled to show a list or a chart representation. </p>
 <button id="view_button" type="button" class="btn mb-3 mt-3 btn-primary">Toggle view of stock data</button>
 
 
 <form asp-controller="Home" asp-action="Stock" method="post">
     <input name="stock_symbol" class="form-control w-25 text-uppercase" placeholder="Stock symbol"  />
-    <input id="submit_btn" type="submit" class="btn btn-primary mb-3 mt-3" value="Search" />   
+    <input id="submit_btn" type="submit" class="btn btn-primary mb-3 mt-3" value="Search">
+    @*<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+  Loading...*@
+    </input>   
 </form>
 
 
@@ -56,18 +59,13 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Volume)
             </td>
-           @* <td>
-                @Html.ActionLink("Edit", "Edit", new { id=item.AutoId }) |
-                @Html.ActionLink("Details", "Details", new { id=item.AutoId }) |
-                @Html.ActionLink("Delete", "Delete", new { id=item.AutoId })
-            </td>*@
         </tr>
         }
     </table>
 </div>
 
 <div>
-    <canvas id="my_chart" width="200" height="200"></canvas>
+    <canvas id="my_chart" width="350" height="200"></canvas>
 
     <script>
 
@@ -79,26 +77,27 @@
             });
         });
 
+        $(document).ready(function() {
+            $("#submit_btn").click(function() {
+                $(this).html(`span class="spinner - border spinner - border - sm" role="status" aria-hidden="true">Loading...</span>`);
+            });
+        });
+
         var model = @Html.Raw(Json.Serialize(ViewBag.stock));
         var closedPriceList = [];
         var dates = [];
         var date = new Date();
         for (let i = 0; i < model.length; i++){
             closedPriceList.push(model[i]['close']);
-            /*let m = date.getMonth() + 1;
-            let d = date.getDate() - i;*/
             dates.push(model[i]['closeDate'].substring(5,10));
-            // dates.push(i);
         }
-        // console.log(closedPriceList);
-        console.log(model[0]['closeDate']);
         const ctx = document.getElementById('my_chart').getContext('2d');
         const my_chart = new Chart(ctx, {
             type: 'line',
             data: {
                 labels: dates,
                 datasets: [{
-                    label: 'Stock data for Volvo B-series',
+                    label: 'Stock data for ' + model[0]["symbol"],
                     data: closedPriceList,
                     backgroundColor: [
                         'rgba(255, 99, 132, 0.2)'
