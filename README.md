@@ -24,3 +24,10 @@ Image 3:
 <img src="https://user-images.githubusercontent.com/18234996/205721137-3f5dbfbc-b713-40a4-90a5-d20889c3aacb.png" height="350" width="600" >
 
 
+
+**Day 5:** changed layout of search form and changed toggle button for view of diagram/list to a checkbox.
+
+Image 4: 
+
+<img src="https://user-images.githubusercontent.com/18234996/206211122-26cd842c-f8ac-4f8b-884d-3ac8adc42350.png" height="326" width="577" >
+
