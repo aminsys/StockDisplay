@@ -37,16 +37,12 @@
 
 
 
-
-
-
-
 <div>
    <table class="table" id="stock_table">
         <tr>
-            <th>
+            @*<th>
                 @Html.DisplayNameFor(model => model.Id)
-            </th>
+            </th>*@
             <th>
                 @Html.DisplayNameFor(model => model.CloseDate)
             </th>
@@ -63,9 +59,9 @@
 
     @foreach (var item in Model) {
         <tr>
-            <td>
+            @*<td>
                 @Html.DisplayFor(modelItem => item.Id)
-            </td>
+            </td>*@
             <td>
                 @Html.DisplayFor(modelItem => item.CloseDate)
             </td>
@@ -106,7 +102,7 @@
         var closedPriceList = [];
         var dates = [];
         var date = new Date();
-        for (let i = 0; i < model.length; i++){
+        for (let i = model.length - 1; i > 0 ; i--){
             closedPriceList.push(model[i]['close']);
             dates.push(model[i]['closeDate'].substring(5,10));
         }

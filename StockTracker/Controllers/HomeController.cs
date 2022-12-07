@@ -59,8 +59,8 @@ namespace StockTracker.Controllers
         public async Task<ActionResult> Stock()
         {
             var model = await GetStockData("AAPL", DateTime.Now.AddDays(-interval), DateTime.Now);
-            model = 
-            ViewBag.Stock = model.ToList(); // Used for the chart.
+            model = model.OrderByDescending(s => s.CloseDate).ToList();
+            ViewBag.Stock = model;
             return View(model);            
         }
 
@@ -69,7 +69,8 @@ namespace StockTracker.Controllers
         {
             // Console.WriteLine("The stock symbol is: " + stock["stock_symbol"].ToString());
             var model = await GetStockData(stock["stock_symbol"], DateTime.Now.AddDays(-interval), DateTime.Now);
-            ViewBag.Stock = model.ToList();
+            model = model.OrderByDescending(s => s.CloseDate).ToList();
+            ViewBag.Stock = model;
             return View(model);
         }
 
